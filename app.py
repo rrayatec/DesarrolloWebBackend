@@ -4,23 +4,35 @@ from pymongo import MongoClient, cursor
 from twilio.rest import Client
 import pymongo
 import datetime
+from decouple import config
 
-# TWILIO
-account_sid = 'AC943b891cffa631549e0a27d790e889b3'
-auth_token = '7b52eef6001bb53360367ec68d1734ed'
-TwilioClient = Client(account_sid, auth_token)
-#############################################################
-
-#############################################################
-client = pymongo.MongoClient(
-    "mongodb+srv://rraya:rubenraya@cluster0.w9ojs.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
-db = client.Escuela
-cuentas = db.alumno
+config.encoding = 'cp1251'
 
 app = Flask(__name__)
 app.permanent_session_lifetime = datetime.timedelta(days=365)
 app.secret_key = "super secret key"
 
+# TWILIO
+#############################################################
+account_sid = config('account_sid')
+auth_token = config('auth_token')
+TwilioClient = Client(account_sid, auth_token)
+#############################################################
+
+# MONGODB
+#############################################################
+mongodb_key = config('mongodb_key')
+client = pymongo.MongoClient(mongodb_key)
+db = client.Escuela
+cuentas = db.alumno
+#############################################################
+
+# FlASK
+#############################################################
+app = Flask(__name__)
+app.permanent_session_lifetime = datetime.timedelta(days=365)
+app.secret_key = "super secret key"
+#############################################################
 
 @app.route('/')
 def home():
@@ -160,6 +172,7 @@ def empty():
 
     return render_template("/empty.html", data=user)
 
+
 @app.route('/home')
 def homeS():
     return render_template('home.html')
@@ -168,6 +181,7 @@ def homeS():
 @app.route('/login')
 def loginSinple():
     return render_template('login.html')
+
 
 @app.route('/loginfull')
 def loginFull():
