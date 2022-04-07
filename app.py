@@ -6,12 +6,6 @@ import pymongo
 import datetime
 from decouple import config
 
-config.encoding = 'cp1251'
-
-app = Flask(__name__)
-app.permanent_session_lifetime = datetime.timedelta(days=365)
-app.secret_key = "super secret key"
-
 # TWILIO
 #############################################################
 account_sid = config('account_sid')
@@ -32,6 +26,7 @@ cuentas = db.alumno
 app = Flask(__name__)
 app.permanent_session_lifetime = datetime.timedelta(days=365)
 app.secret_key = "super secret key"
+config.encoding = 'cp1251'
 #############################################################
 
 @app.route('/')
