@@ -1,9 +1,14 @@
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import Flask, redirect, url_for, request, render_template, session
 import datetime
+
+app = Flask(__name__)
+app.permanent_session_lifetime = datetime.timedelta(days=365)
+app.secret_key = "super secret key"
+
 # FlASK
 #############################################################
 app = Flask(__name__)
-app.permanent_session_lifetime = datetime.timedelta(days=1)
+app.permanent_session_lifetime = datetime.timedelta(days=365)
 app.secret_key = "super secret key"
 #############################################################
 
@@ -11,38 +16,63 @@ app.secret_key = "super secret key"
 @app.route('/')
 def home():
     email = None
-    if "email" in session:
-        email = session["email"]
-        return render_template('index.html', data=email)
-    else:
-        return render_template('Login.html', data=email)
+    if 'email' in session:
+        email = session['email']
+    return render_template('index.html', error=email)
 
 
-@app.route('/signup')
-def signup():
-    name = request.form["name"]
-    email = request.form["email"]
-    password = request.form["password"]
-    return render_template('index.html', data=email)
-
-
-@app.route("/login", methods=["GET", "POST", "OPTIONS"])
+@app.route('/login', methods=['GET'])
 def login():
     email = None
-    if "email" in session:
-        return render_template('index.html', data=session["email"])
+    if 'email' in session:
+        email = session['email']
+        return render_template('index.html', error=email)
+
+    return render_template('login.html', error=email)
+
+
+@app.route('/login', methods=['POST'])
+def login2Index():
+    email = ""
+    if 'email' in session:
+        return render_template('index.html', error=email)
+
+    email = request.form['email']
+    password = request.form['password']
+    session['email'] = email
+    session['password'] = password
+
+    return render_template('index.html', error=email)
+
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    email = ""
+    if 'email' in session:
+        return render_template('index.html', error=email)
     else:
-        if (request.method == "GET"):
-            return render_template("Login.html", data="email")
-        else:
-            email = request.form["email"]
-            password = request.form["password"]
-            session["email"] = email
-            return render_template("index.html", data=email)
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        session['email'] = email
+        session['password'] = password
+        session['name'] = name
+    return render_template('index.html', error=email)
 
 
 @app.route('/logout')
-def logout():
-    if "email" in session:
-        session.clear()
-        return redirect(url_for("home"))
+def getcookie():
+    if 'email' in session:
+        email = session['email']
+    session.clear()
+    return redirect(url_for('home'))
+
+
+@app.route('/homepage')
+def homepage():
+    return render_template('HomePage.html')
+
+
+@app.route('/create_form')
+def create_form():
+    return render_template('CreateForm.html')
