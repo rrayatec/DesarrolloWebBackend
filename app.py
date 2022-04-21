@@ -1,10 +1,6 @@
 from flask import Flask, redirect, url_for, request, render_template, session
 import datetime
 
-app = Flask(__name__)
-app.permanent_session_lifetime = datetime.timedelta(days=365)
-app.secret_key = "super secret key"
-
 # FlASK
 #############################################################
 app = Flask(__name__)
