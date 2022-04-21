@@ -26,7 +26,7 @@ def signup():
     return render_template('index.html', data=email)
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST", "OPTIONS"])
 def login():
     email = None
     if "email" in session:
