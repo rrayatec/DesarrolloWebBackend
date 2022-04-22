@@ -1,5 +1,3 @@
-from crypt import methods
-from email import message
 from http import client
 from flask import Flask, redirect, url_for, request, render_template, session
 import datetime
@@ -12,7 +10,6 @@ app = Flask(__name__)
 app.permanent_session_lifetime = datetime.timedelta(days=365)
 app.secret_key = "super secret key"
 #############################################################
-
 
 # MONGODB
 #############################################################
@@ -30,14 +27,12 @@ auth_token = ""
 TwilioClient = Client(account_sid, auth_token)
 #############################################################
 
-
 @app.route('/')
 def home():
     email = None
     if 'email' in session:
         email = session['email']
     return render_template('index.html', error=email)
-
 
 @app.route('/login', methods=['GET'])
 def login():
