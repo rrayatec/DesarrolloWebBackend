@@ -1,3 +1,4 @@
+from crypt import methods
 from http import client
 from flask import Flask, redirect, url_for, request, render_template, session
 import datetime
@@ -82,13 +83,13 @@ def usuarios():
     users = []
     for doc in cursor:
         users.append(doc)
-    return render_template("/Retrive.html", data=users)
+    return render_template("/Usuarios.html", data=users)
 
 
-@app.route("/insert")
+@app.route("/insert", methods=["POST"])
 def insertUsers():
     user = {
-        "matricula": "1",
+        "matricula": request.form["matricula"],
         "nombre": "Ruben Raya",
         "correo": "rraya@tec.mx",
         "contrasena": "1234",
@@ -112,13 +113,32 @@ def find_one(matricula):
         return "%s" % e
 
 
-@app.route("/delete_one/<matricula>")
+@app.route("/delete/<matricula>")
 def delete_one(matricula):
     try:
         user = cuentas.delete_one({"matricula": (matricula)})
         if user.deleted_count == None:
             return "<p>La matricula %s nó existe</p>" % (matricula)
         else:
-            return "<p>Eliminamos %d matricula: %s </p>" % (user.deleted_count, matricula)
+            return redirect(url_for("usuarios"))
     except Exception as e:
         return "%s" % e
+
+
+@app.route("/update", methods=["POST"])
+def update():
+    try:
+        filter = {"matricula": request.form["matricula"]}
+        user = {"$set": {
+            "nombre": request.form["nombre"],
+        }}
+        cuentas.update_one(filter, user)
+        return redirect(url_for("usuarios"))
+
+    except Exception as e:
+        return "error %s" % (e)
+
+
+@app.route('/create')
+def create():
+    return render_template('Create.html')
