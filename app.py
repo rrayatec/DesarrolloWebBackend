@@ -3,6 +3,7 @@ from flask import Flask, redirect, url_for, request, render_template, session
 import datetime
 import pymongo
 from twilio.rest import Client
+from decouple import config
 
 # FlASK
 #############################################################
@@ -13,7 +14,7 @@ app.secret_key = "super secret key"
 
 # MONGODB
 #############################################################
-mongodb_key = ""
+mongodb_key = config('mongodb_key')
 client = pymongo.MongoClient(
     mongodb_key, tls=True, tlsAllowInvalidCertificates=True)
 db = client.Escuela
@@ -22,10 +23,11 @@ cuentas = db.alumno
 
 # Twilio
 #############################################################
-account_sid = ""
-auth_token = ""
+account_sid = config('account_sid')
+auth_token = config('auth_token')
 TwilioClient = Client(account_sid, auth_token)
 #############################################################
+
 
 @app.route('/')
 def home():
@@ -33,6 +35,7 @@ def home():
     if 'email' in session:
         email = session['email']
     return render_template('index.html', error=email)
+
 
 @app.route('/login', methods=['GET'])
 def login():
