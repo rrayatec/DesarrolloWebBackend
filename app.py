@@ -83,3 +83,19 @@ def usuarios():
     for doc in cursor:
         users.append(doc)
     return render_template("/usuarios.html", data=users)
+
+
+@app.route("/insert")
+def insertUsers():
+    user = {
+        "matricula": "1",
+        "nombre": "Ruben Raya",
+        "correo": "rraya@tec.mx",
+        "contrasena": "1234",
+    }
+
+    try:
+        cuentas.insert_one(user)
+        return redirect(url_for("usuarios"))
+    except Exception as e:
+        return "<p>El servicio no esta disponible =>: %s %s" % type(e), e
