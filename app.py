@@ -90,9 +90,9 @@ def usuarios():
 def insertUsers():
     user = {
         "matricula": request.form["matricula"],
-        "nombre": "Ruben Raya",
-        "correo": "rraya@tec.mx",
-        "contrasena": "1234",
+        "nombre": request.form["nombre"],
+        "correo": request.form["correo"],
+        "contrasena": request.form["contrasena"],
     }
     try:
         cuentas.insert_one(user)
