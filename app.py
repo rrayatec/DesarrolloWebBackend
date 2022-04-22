@@ -1,8 +1,10 @@
 from crypt import methods
+from email import message
 from http import client
 from flask import Flask, redirect, url_for, request, render_template, session
 import datetime
 import pymongo
+from twilio.rest import Client
 
 # FlASK
 #############################################################
@@ -14,11 +16,18 @@ app.secret_key = "super secret key"
 
 # MONGODB
 #############################################################
-mongodb_key = "mongodb+srv://desarrollowebuser:desarrollowebpassword@cluster0.dfh7g.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+mongodb_key = ""
 client = pymongo.MongoClient(
     mongodb_key, tls=True, tlsAllowInvalidCertificates=True)
 db = client.Escuela
 cuentas = db.alumno
+#############################################################
+
+# Twilio
+#############################################################
+account_sid = ""
+auth_token = ""
+TwilioClient = Client(account_sid, auth_token)
 #############################################################
 
 
@@ -96,6 +105,13 @@ def insertUsers():
     }
     try:
         cuentas.insert_one(user)
+        comogusten = TwilioClient.messages.create(
+            from_="whatsapp:+14155238886",
+            body="El usuario %s se agregó a tu pagina web" % (
+                request.form["nombre"]),
+            to="whatsapp:+5215514200581"
+        )
+        print(comogusten.sid)
         return redirect(url_for("usuarios"))
     except Exception as e:
         return "<p>El servicio no esta disponible =>: %s %s" % type(e), e
