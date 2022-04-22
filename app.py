@@ -82,7 +82,7 @@ def usuarios():
     users = []
     for doc in cursor:
         users.append(doc)
-    return render_template("/usuarios.html", data=users)
+    return render_template("/Retrive.html", data=users)
 
 
 @app.route("/insert")
@@ -93,9 +93,32 @@ def insertUsers():
         "correo": "rraya@tec.mx",
         "contrasena": "1234",
     }
-
     try:
         cuentas.insert_one(user)
         return redirect(url_for("usuarios"))
     except Exception as e:
         return "<p>El servicio no esta disponible =>: %s %s" % type(e), e
+
+
+@app.route("/find_one/<matricula>")
+def find_one(matricula):
+    try:
+        user = cuentas.find_one({"matricula": (matricula)})
+        if user == None:
+            return "<p>La matricula %s nó existe</p>" % (matricula)
+        else:
+            return "<p>Encontramos: %s </p>" % (user)
+    except Exception as e:
+        return "%s" % e
+
+
+@app.route("/delete_one/<matricula>")
+def delete_one(matricula):
+    try:
+        user = cuentas.delete_one({"matricula": (matricula)})
+        if user.deleted_count == None:
+            return "<p>La matricula %s nó existe</p>" % (matricula)
+        else:
+            return "<p>Eliminamos %d matricula: %s </p>" % (user.deleted_count, matricula)
+    except Exception as e:
+        return "%s" % e
