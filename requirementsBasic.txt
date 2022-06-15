@@ -8,7 +8,7 @@ importlib-metadata==4.11.3
 itsdangerous==2.1.2
 Jinja2==2.11.3
 MarkupSafe==2.1.1
-PyJWT==2.3.0
+PyJWT==2.4.0
 pymongo==4.0.2
 python-decouple==3.6
 pytz==2022.1
