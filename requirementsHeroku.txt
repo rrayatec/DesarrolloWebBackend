@@ -6,7 +6,7 @@ Flask==2.0.2
 Flask-RESTful==0.3.9
 gunicorn==20.1.0
 itsdangerous==2.0.1
-Jinja2==3.0.2
+Jinja2==2.11.3
 MarkupSafe==2.0.1
 peewee==3.14.4
 pycodestyle==2.8.0
