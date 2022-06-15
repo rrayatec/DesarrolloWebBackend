@@ -19,7 +19,7 @@ marshmallow==3.10.0
 marshmallow-sqlalchemy==0.24.1
 peewee==3.14.4
 pycodestyle==2.7.0
-PyJWT==2.3.0
+PyJWT==2.4.0
 pymongo==3.12.0
 python-decouple==3.6
 python-dotenv==0.20.0
